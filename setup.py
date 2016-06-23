@@ -1,13 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 
 try:
     from setuptools import setup
 except ImportError:
-    print "Ansigenome needs setuptools in order to build. " + \
+    print("Ansigenome needs setuptools in order to build. " + \
           "Install it using your package manager " + \
-          "(usually python-setuptools) or via pip (pip install setuptools)."
+          "(usually python-setuptools) or via pip (pip install setuptools).")
     sys.exit(1)
 
 setup(name="ansigenome",

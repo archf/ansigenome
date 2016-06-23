@@ -1,8 +1,7 @@
 import pkg_resources
 import os.path
 
-import utils
-
+import ansigenome.utils as utils
 
 GIT_AUTHOR = utils.capture_shell("git config user.name")[0][:-1]
 GIT_EMAIL = utils.capture_shell("git config user.email")[0][:-1]
@@ -138,7 +137,6 @@ ansigenome_info:
   #custom: |
   #  Any custom output you want after the usage section...
 """
-
 
 LOG_COLOR = {
     "ok": "green",

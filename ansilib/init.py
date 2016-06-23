@@ -7,7 +7,6 @@ import constants as c
 import ui as ui
 import utils as utils
 
-
 default_mainyml_template = """---
 
 """
@@ -15,7 +14,7 @@ default_mainyml_template = """---
 default_travisyml_template = """---
 
 language: 'python'
-python: '2.7'
+python: '3.5'
 
 virtualenv:
   system_site_packages: true
@@ -40,7 +39,6 @@ default_testyml_template = """---
 assert_playbook_runs
 assert_playbook_idempotent
 """
-
 
 class Init(object):
     """
@@ -141,4 +139,4 @@ class Init(object):
         test_file = os.path.join(self.output_path, "tests", "test")
         utils.string_to_file(test_file, testyml_template)
 
-        os.chmod(test_file, 0755)
+        os.chmod(test_file, '0755')

@@ -2,8 +2,8 @@ import os
 
 import constants as c
 import ui as ui
-import utils as utils
-
+import utils
+import sys
 
 class Run(object):
     def __init__(self, args, options, config):
@@ -19,7 +19,7 @@ class Run(object):
         Execute the shell command.
         """
         stderr = ""
-        role_count = 0
+        roles_count = 0
         for role in utils.roles_dict(self.roles_path):
             self.command = self.command.replace("%role_name", role)
             (_, err) = utils.capture_shell("cd {0} && {1}".
@@ -28,13 +28,15 @@ class Run(object):
                                                   self.command))
 
             stderr = err
-            role_count += 1
+            roles_count += 1
 
-        utils.exit_if_no_roles(role_count, self.roles_path)
+        if roles_count == 0:
+            ui.warn(c.MESSAGES["empty_roles_path"], roles_path)
+            sys.exit()
 
         if len(stderr) > 0:
             ui.error(c.MESSAGES["run_error"], stderr[:-1])
         else:
             if not self.config["options_quiet"]:
                 ui.ok(c.MESSAGES["run_success"].replace(
-                    "%role_count", str(role_count)), self.options.command)
+                    "%role_count", str(roles_count)), self.options.command)

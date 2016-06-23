@@ -6,7 +6,7 @@ import json
 import os
 import re
 import subprocess
-import urllib2
+import urllib
 import yaml
 #  import collections
 
@@ -17,20 +17,17 @@ import constants as c
 import ui as ui
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
+# reload(sys)
 
 class RelEnvironment(Environment):
     """Override join_path() to enable relative template paths."""
     def join_path(self, template, parent):
         return os.path.join(os.path.dirname(parent), template)
 
-
 # ------------------------------------------------------------------------
 # file i/o
 # ------------------------------------------------------------------------
-
 
 def mkdir_p(path):
     """
@@ -45,7 +42,6 @@ def mkdir_p(path):
             ui.error(c.MESSAGES["path_unmakable"], err)
             sys.exit(1)
 
-
 def string_to_file(path, input):
     """
     Write a file from a given string.
@@ -54,7 +50,6 @@ def string_to_file(path, input):
 
     with codecs.open(path, "w+", "UTF-8") as file:
         file.write(input)
-
 
 def file_to_string(path):
     """
@@ -66,7 +61,6 @@ def file_to_string(path):
 
     with codecs.open(path, "r", "UTF-8") as contents:
         return contents.read()
-
 
 def file_to_list(path):
     """
@@ -81,26 +75,17 @@ def file_to_list(path):
 
     return lines
 
-
-def dict_to_json(input):
-    """
-    Return json from a dict.
-    """
-    return json.dumps(input)
-
-
 def url_to_string(url):
     """
     Return the contents of a web site url as a string.
     """
     try:
-        page = urllib2.urlopen(url)
-    except (urllib2.HTTPError, urllib2.URLError) as err:
+        page = urllib.urlopen(url)
+    except (urllib.HTTPError, urllib.URLError) as err:
         ui.error(c.MESSAGES["url_unreachable"], err)
         sys.exit(1)
 
     return page
-
 
 def template(path, extend_path, out):
     """
@@ -166,7 +151,6 @@ def template(path, extend_path, out):
         ui.error(c.MESSAGES["template_error"], err)
         sys.exit(1)
 
-
 def files_in_path(path):
     """
     Return a list of all files in a path but exclude git folders.
@@ -183,7 +167,6 @@ def files_in_path(path):
 
     return aggregated_files
 
-
 def exit_if_path_not_found(path):
     """
     Exit if the path is not found.
@@ -191,20 +174,6 @@ def exit_if_path_not_found(path):
     if not os.path.exists(path):
         ui.error(c.MESSAGES["path_missing"], path)
         sys.exit(1)
-
-
-def ask(question, default):
-    result = raw_input("{0} [{1}]: ".format(question, default))
-
-    if not result:
-        result = default
-
-    return result
-
-# ------------------------------------------------------------------------
-# yaml
-# ------------------------------------------------------------------------
-
 
 def yaml_load(path, input="", err_quit=False):
     """
@@ -226,7 +195,6 @@ def yaml_load(path, input="", err_quit=False):
 
         return False
 
-
 def to_nice_yaml(yaml_input, indentation=2):
     """
     Return condensed yaml into human readable yaml.
@@ -237,7 +205,6 @@ def to_nice_yaml(yaml_input, indentation=2):
 # ------------------------------------------------------------------------
 # process capturing and detection
 # ------------------------------------------------------------------------
-
 
 def capture_shell(command):
     """
@@ -253,7 +220,6 @@ def capture_shell(command):
 # ------------------------------------------------------------------------
 # general
 # ------------------------------------------------------------------------
-
 
 def keys_in_dict(d, parent_key, keys):
     """
@@ -271,7 +237,6 @@ def keys_in_dict(d, parent_key, keys):
             keys.append(prefix + key)
 
     return keys
-
 
 def swap_yaml_string(file_path, swaps):
     """
@@ -294,20 +259,9 @@ def swap_yaml_string(file_path, swaps):
 
     return (new_file, changed)
 
-
 # ------------------------------------------------------------------------
 # ansigenome specific
 # ------------------------------------------------------------------------
-
-
-def exit_if_no_roles(roles_count, roles_path):
-    """
-    Exit if there were no roles found.
-    """
-    if roles_count == 0:
-        ui.warn(c.MESSAGES["empty_roles_path"], roles_path)
-        sys.exit()
-
 
 def roles_dict(path, repo_prefix="", repo_sub_dir=""):
     """
@@ -335,26 +289,6 @@ def roles_dict(path, repo_prefix="", repo_sub_dir=""):
 
     return aggregated_roles
 
-
-def role_name(role):
-    """
-    Return the role name from a folder name.
-    """
-    return role
-
-
-def is_role(path):
-    """
-    Determine if a path is an ansible role.
-    """
-    seems_legit = False
-    for folder in c.ANSIBLE_FOLDERS:
-        if os.path.exists(os.path.join(path, folder)):
-            seems_legit = True
-
-    return seems_legit
-
-
 def stripped_args(args):
     """
     Return the stripped version of the arguments.
@@ -364,14 +298,6 @@ def stripped_args(args):
         stripped_args.append(arg.strip())
 
     return stripped_args
-
-
-def normalize_role(role, config):
-    """
-    Normalize a role name.
-    """
-    return role
-
 
 def create_meta_main(create_path, config, role, categories):
     """
@@ -392,7 +318,6 @@ def create_meta_main(create_path, config, role, categories):
 
     string_to_file(create_path, meta_file)
 
-
 def get_version(path, default="master"):
     """
     Return the version from a VERSION file
@@ -404,7 +329,6 @@ def get_version(path, default="master"):
             version = version_contents.strip()
 
     return version
-
 
 def write_config(path, config):
     """
